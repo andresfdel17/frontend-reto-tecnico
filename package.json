@@ -13,7 +13,13 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "setup-frontend": "./scripts/setup-frontend.sh",
+    "test-connectivity": "./scripts/test-connectivity.sh",
+    "docker:start": "./scripts/setup-frontend.sh",
+    "docker:stop": "docker-compose down -v",
+    "docker:logs": "docker-compose logs -f",
+    "docker:rebuild": "docker-compose down -v && docker-compose up -d --build"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.0.1",

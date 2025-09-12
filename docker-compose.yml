@@ -1,0 +1,19 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:3000/api}
+        VITE_APP_NAME: ${VITE_APP_NAME:-MyApp}
+        VITE_NODE_ENV: ${VITE_NODE_ENV:-production}
+    container_name: frontend_app
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-3001}:80"
+    networks:
+      - reto_tecnico_network
+
+networks:
+  reto_tecnico_network:
+    external: true
