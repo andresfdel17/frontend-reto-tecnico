@@ -1,0 +1,74 @@
+@import "../../../assets/css/mainColors.css";
+
+.collapse {
+  display: none !important;
+}
+.card {
+  border-radius: 15px !important;
+  min-width: 25vw;
+  min-height: 25vw;
+}
+
+.right {
+  background-color: var(--sidebar-bg-color);
+}
+
+.card_header {
+  background-color: #d0d0d0 !important;
+  border-radius: 15px !important;
+  margin: 0;
+}
+
+.text_grey {
+  color: var(--text3-color);
+}
+
+.btn-primary {
+  background-color: #9b9b9b;
+  border: 0px transparent;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary:disabled {
+  background-color: #61DAFB !important;
+  border: 0px transparent;
+  box-shadow: 0 2px 6px 0 #000000 !important;
+}
+
+.purple {
+  background-color: #ffffff;
+}
+
+
+.shadow {
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22) !important;
+}
+
+.main-content {
+  margin-left: 15px !important;
+  margin-right: 15px !important;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+}
+
+@media screen and (max-width: 766px) {
+  .left {
+    display: none;
+  }
+
+  .card_header {
+    display: none;
+  }
+
+  .collapse {
+    display: flex !important;
+  }
+
+  .right {
+    width: 100%;
+  }
+}
