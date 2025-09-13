@@ -32,6 +32,14 @@ export const useNotify = () => {
                     callback: data.callback
                 });
                 break;
+            case 500:
+                Alert({
+                    title: t('error'),
+                    text: translated ? t(data.text) : data.text,
+                    type: "error",
+                    callback: data.callback
+                });
+                break;
             default:
                 Alert({
                     title: t('warning'),

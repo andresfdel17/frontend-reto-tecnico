@@ -16,13 +16,16 @@ export const Sidebar = ({ children }: ContextProps) => {
     const [fullWidth, setFullWidth] = useState<boolean>(false);
     const { theme, setTheme } = useTheme();
     const { user, LogOut } = useAuth();
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     //const { validatePermissions } = usePermissions();
     const [openCollapse, setOpenCollapse] = useState<boolean>(false);
     useEffect(() => {
-        validateResponsive();     
-     
+        validateResponsive();
+
     }, []);
+    const handleUpdateLang = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        i18n.changeLanguage(e.target.value);
+    }
     const CollapsableNavItem = (props: ISideBarCollapsableNavItem) => {
         const [opened, setOpened] = useState<boolean>(false);
         const { title, icon, children = null } = props;
@@ -102,7 +105,7 @@ export const Sidebar = ({ children }: ContextProps) => {
                                 <i className="uil-bars" />
                             </Button>
                             <Link to="/home" className="navbar-brand">
-                                <Logo width="100px" transparent className="img-fluid" />
+                                <Logo width="80px" transparent className="img-fluid" />
                             </Link>
                         </div>
                         <Button type="button" className='navbar-toggler ml-auto' onClick={() => setOpenCollapse(!openCollapse)}
@@ -114,6 +117,12 @@ export const Sidebar = ({ children }: ContextProps) => {
                         <Collapse className="navbar-collapse" in={openCollapse}>
                             <div id="toggle-navbar">
                                 <ul className="navbar-nav ms-auto">
+                                    <li className="nav-item">
+                                        <select value={i18n.language} className="form-select form-select-sm mt-2" onChange={handleUpdateLang}>
+                                            <option value="en">{t("english")}</option>
+                                            <option value="es">{t("spanish")}</option>
+                                        </select>
+                                    </li>
                                     <li className="nav-item">
                                         <Link to='#' className="nav-link" onClick={() => { setTheme(theme === "light" ? "dark" : "light") }}>
                                             <FontAwesomeIcon icon={theme === "light" ? faMoon : faSun} />
@@ -149,7 +158,7 @@ export const Sidebar = ({ children }: ContextProps) => {
                     {children}
                 </Container>
                 <footer>
-                    &copy; {APP_NAME} <br /> 2025 - {new Date().getFullYear()} <br />
+                    &copy; {APP_NAME} <br /> {new Date().getFullYear()} <br />
                 </footer>
             </section>
         </>

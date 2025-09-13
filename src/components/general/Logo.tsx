@@ -1,5 +1,5 @@
 import type { LogoProps } from "@types";
-import logo from "@assets/img/icon.jpeg";
+import logo from "@assets/img/icon.png";
 import logoTransparent from "@assets/img/transparent_logo.png";
 import { memo } from "react";
 

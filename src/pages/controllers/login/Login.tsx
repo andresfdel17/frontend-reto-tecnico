@@ -46,16 +46,18 @@ export const Login = () => {
     ev.preventDefault();
     setLoading(true);
     const formData = serialize(ev.target as HTMLFormElement);
-    const { data } = await publicFetch.post<IAxiosResponseMessage>('/Login/Register',
+    const { data } = await publicFetch.post<IAxiosResponseMessage>('/login/register',
       formData
     );
     data.callback = function (): any {
+      if(data?.code !== 201) return;
       (ev.target as HTMLFormElement).reset();
-      setActualAge(0);
       setPage('login');
+      return;
     }
-    notify(data);
+    notify(data, true);
     setLoading(false);
+    return;
   }
   return isAutenticated() ? <Navigate to="/home" /> : (
     <>
@@ -70,7 +72,7 @@ export const Login = () => {
           <Row style={{ height: "100%" }}>
             <Col className='my-auto'>
               <h5 style={{ fontSize: "3rem" }} className="mt-0 mb-0 text-light text-center mb-0 align-middle">
-                <Logo width='200px' />
+                <Logo width='300px' />
               </h5>
             </Col>
           </Row>
@@ -82,7 +84,7 @@ export const Login = () => {
                 <Card className={`${styles.card} ${styles.shadow} border-0 mx-auto`}>
                   <Card.Header className={`${styles.card_header}  p-4`}>
                     <h5 className='text-light text-center mb-0 align-middle'>
-                      <Logo width='50px' />
+                      <Logo width='100px' />
                     </h5>
                   </Card.Header>
                   <Card.Body className="p-4">
@@ -139,14 +141,8 @@ export const Login = () => {
                                     {t("email")}
                                   </h6 >
                                 </label>
-                                <InputGroup size="sm" className="mb-1">
-                                  <FormControl ref={codeRef} size="sm" name="email" required />
-                                  <Button size="sm" variant={'primary'}>
-                                    <FontAwesomeIcon icon={faCheck} />&nbsp;
-                                  </Button>
-                                </InputGroup>
+                                <FormControl type="email" size="sm" name="email" required />
                                 <div className="invalid-feedback"> {t("email")}</div>
-                                <FormControl size="sm" type="number" maxLength={6} name='verify-code' required className="mb-2" placeholder={t('verify-code')} />
                                 <label>
                                   <h6 className='text-grey'>
                                     <FontAwesomeIcon icon={faUser} />&nbsp;
@@ -156,37 +152,17 @@ export const Login = () => {
                                 <FormControl size="sm" name='name' required className="mb-2" />
                                 <label>
                                   <h6 className='text-grey'>
-                                    <FontAwesomeIcon icon={faCalendarWeek} />&nbsp;
-                                    {t("birth-date")}
-                                  </h6 >
-                                </label>
-                                <InputGroup size="sm" className="mb-1">
-                                  <FormControl className={actualAge >= 18 ? "is-valid" : actualAge !== 0 ? "is-invalid" : ''} type="date" size="sm" name="birthdate" required />
-                                  <Button size="sm" variant="primary">
-                                    {actualAge} {t('years')}
-                                  </Button>
-                                </InputGroup>
-                                <label>
-                                  <h6 className='text-grey'>
                                     <FontAwesomeIcon icon={faKey} />&nbsp;
                                     {t("password")}
                                   </h6 >
                                 </label>
                                 <InputGroup size="sm" className="mb-1">
-                                  <FormControl type={showPass ? "text" : "password"} size="sm" name="password" required />
+                                  <FormControl type={showPass ? "text" : "password"} minLength={8} size="sm" name="password" required />
                                   <Button size="sm" variant="primary" onClick={() => setShowPass(prev => !prev)}>
                                     {
                                       showPass ? <FontAwesomeIcon icon={faEyeSlash} /> : <FontAwesomeIcon icon={faEye} />
                                     }
                                   </Button>
-                                </InputGroup>
-                                <InputGroup size="sm" className="mb-1 form-check">
-                                  <Form.Check
-                                    required
-                                    type="checkbox"
-                                    name="accept_tyc"
-                                    label={<Link to={TERM_URL} target="_blank" >{t("terms-and-conditions")}</Link>}
-                                  />
                                 </InputGroup>
                               </div >
                               <Row className="m-3 justify-content-center">

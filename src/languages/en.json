@@ -7,5 +7,15 @@
     "username": "Username",
     "password": "Password",
     "admin": "Admin",
-    "user": "User"
+    "user": "User",
+    "email": "Email",
+    "full-name": "Full Name",
+    "user-exists": "User already exists",
+    "user-created": "User created successfully",
+    "success": "Success",
+    "warning": "Warning",
+    "server-error": "Server error",
+    "login-error": "Login error",
+    "error": "Error",
+    "session-started": "Session started"
 }

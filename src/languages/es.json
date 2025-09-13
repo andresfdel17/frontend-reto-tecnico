@@ -7,5 +7,15 @@
     "username": "Usuario",
     "password": "Contraseña",
     "admin": "Administrador",
-    "user": "Usuario"
+    "user": "Usuario",
+    "email": "Correo electrónico",
+    "full-name": "Nombre completo",
+    "user-exists": "Usuario ya existe",
+    "user-created": "Usuario creado exitosamente",
+    "success": "Éxito",
+    "warning": "Advertencia",
+    "server-error": "Error del servidor",
+    "login-error": "Error de inicio de sesión",
+    "error": "Error",
+    "session-started": "Sesión iniciada"
 }
