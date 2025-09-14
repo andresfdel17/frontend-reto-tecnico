@@ -3,6 +3,7 @@ import { useAuth } from "@contexts";
 import type { ContextProps } from "@types";
 import { BasePanel, FullLoader } from "@components";
 import { lazy, Suspense } from "react";
+import { Sends } from "@pages";
 
 // Lazy loading de páginas principales
 const Login = lazy(() => import("@pages").then(m => ({ default: m.Login })));
@@ -41,6 +42,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <Home />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/sends",
+    element: (
+      <ProtectedRoute>
+        <Sends />
       </ProtectedRoute>
     ),
   },

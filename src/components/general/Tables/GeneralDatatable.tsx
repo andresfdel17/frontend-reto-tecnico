@@ -107,6 +107,32 @@ const GeneralDatatableComponent = <T = any>({ showFilters = true, showFilterId =
       {...(showFilters && ({ subHeaderComponent }))}
       conditionalRowStyles={conditionalStyles}
       {...customProps}
+      customStyles={{
+        cells: {
+          style: {
+            backgroundColor: 'var(--body-bg)',
+            color: 'var(--text2-color)',
+          },
+        },
+        headCells: {
+          style: {
+            backgroundColor: 'var(--body-bg)',
+            color: 'var(--text2-color)',
+          },
+        },
+        pagination: {
+          style: {
+            backgroundColor: 'var(--body-bg)',
+            color: 'var(--text2-color)',
+          },
+        },
+        subHeader: {
+          style: {
+            color: 'var(--text2-color)',
+            backgroundColor: 'var(--body-bg)',
+          },
+        },
+      }}
     />
   );
 };

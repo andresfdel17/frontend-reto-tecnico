@@ -1,23 +1,20 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next";
 import { GlobalStyle, LoginImg, Logo, TimeLoader } from "@components";
-import { Row, Col, Card, Button, Spinner, InputGroup, FormControl, Form } from "react-bootstrap";
+import { Row, Col, Card, Button, Spinner, InputGroup, FormControl } from "react-bootstrap";
 import styles from "./Login.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarWeek, faCheck, faEnvelopeOpenText, faEye, faEyeSlash, faKey, faMoon, faSun, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelopeOpenText, faEye, faEyeSlash, faKey, faMoon, faSun, faUser } from "@fortawesome/free-solid-svg-icons";
 import { useForm, useNotify } from "@hooks";
 import { useAuth, useAxios, useTheme } from "@contexts";
 import type { IAxiosResponseMessage } from "@types";
-import { Link, Navigate } from "react-router-dom";
-import { TERM_URL } from "@utils";
+import {  Navigate } from "react-router-dom";
 
 export const Login = () => {
-  const codeRef = useRef<HTMLInputElement>(null);
   const { Login, isAutenticated } = useAuth();
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const [page, setPage] = useState('login');
-  const [actualAge, setActualAge] = useState(0);
   const { t, i18n } = useTranslation();
   const { serialize } = useForm();
   const { theme, setTheme } = useTheme();
@@ -114,7 +111,7 @@ export const Login = () => {
                                   {t("password")}
                                 </h6>
                               </label>
-                              <input name="password" required id="password" type="password" className="form-control" />
+                              <input name="password" minLength={6} required id="password" type="password" className="form-control" />
                               <div className="invalid-feedback">{t('password')}</div>
                             </div >
                             <Row className="m-3 justify-content-center">

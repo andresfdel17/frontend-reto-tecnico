@@ -3,24 +3,14 @@ export const APP_URL = import.meta.env.VITE_APP_URL ?? 'http://localhost:3000';
 export const APP_NAME = import.meta.env.VITE_APP_NAME ?? 'MyApp';
 export const TERM_URL = import.meta.env.VITE_TERM_URL ?? 'http://localhost:3000/term';
 export const NODE_ENV = import.meta.env.VITE_NODE_ENV ?? 'development';
-export const APP_VERSION = import.meta.env.VITE_REACT_APP_VERSION ?? '1.0.0';
-export const LEGAL_URL = import.meta.env.VITE_LEGAL_URL ?? '';
-export const PRIVACY_URL = import.meta.env.VITE_PRIVACY_URL ?? '';
-export const FACEBOOK_URL = import.meta.env.VITE_FACEBOOK_URL ?? '';
-export const WHATSAPP = import.meta.env.VITE_WHATSAPP ?? '';
-export const TELEGRAM = import.meta.env.VITE_TELEGRAM ?? '';
-export const YOUTUBE = import.meta.env.VITE_YOUTUBE ?? '';
-export const SOPORTE_URL = import.meta.env.VITE_SOPORTE_URL ?? '';
-export const FAQ_URL = import.meta.env.VITE_FAQ_URL ?? '';
-export const PROPUESTA_URL = import.meta.env.VITE_PROPUESTA_URL ?? '';
-export const NOTICIAS_URL = import.meta.env.VITE_NOTICIAS_URL ?? '';
-export const TUTORIALES_URL = import.meta.env.VITE_TUTORIALES_URL ?? '';
-//Permisos
-export const ADMIN_PANEL_ACCESS = 1;
-export const USER_CRUD_ACCESS = 2;
-export const COMPANY_CRUD_ACCESS = 5;
-export const LOG_ACCESS = 6;
-export const EDIT_PLAN_GROUPS = 7;
-export const FEE_CRUD_ACCESS = 8;
-export const DONATION_CRUDS = 9;
-export const BONDS_CRUD_ACCESS = 10;
+
+export const GCP_TOKEN = import.meta.env.VITE_GMAPS_KEY ?? '';
+// Environment checks
+export const isDevelopment = NODE_ENV === 'development' || import.meta.env.MODE === 'development';
+export const isProduction = NODE_ENV === 'production' || import.meta.env.MODE === 'production';
+export const isTesting = NODE_ENV === 'testing' || import.meta.env.MODE === 'testing';
+// Development and debugging features
+export const DEBUG_MODE = (import.meta.env.VITE_DEBUG_MODE ?? 'false') === 'true';
+export const STRICT_MODE = (import.meta.env.VITE_STRICT_MODE ?? 'false') === 'true';
+export const SHOW_GRID = (import.meta.env.VITE_SHOW_GRID ?? 'false') === 'true';
+export const LOG_LEVEL = import.meta.env.VITE_LOG_LEVEL ?? 'info';

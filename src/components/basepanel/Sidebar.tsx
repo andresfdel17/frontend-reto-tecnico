@@ -7,6 +7,7 @@ import { APP_NAME } from "@utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 import { Logo } from "../general";
+import { NotificationDropdown } from "../notifications";
 import iconImg from "@assets/img/profile.png";
 import { useTranslation } from "react-i18next";
 //import { usePermissions } from "@hooks";
@@ -21,7 +22,6 @@ export const Sidebar = ({ children }: ContextProps) => {
     const [openCollapse, setOpenCollapse] = useState<boolean>(false);
     useEffect(() => {
         validateResponsive();
-
     }, []);
     const handleUpdateLang = (e: React.ChangeEvent<HTMLSelectElement>) => {
         i18n.changeLanguage(e.target.value);
@@ -78,7 +78,8 @@ export const Sidebar = ({ children }: ContextProps) => {
                 </div>
                 <ul className="categories list-unstyled">
                     <NavItem title="Home" link="/home" icon="uil uil-estate fa-fw" />
-                    <CollapsableNavItem eventKey="/test1" title="Asplicaciones" icon="uil-apps">
+                    <NavItem title={t("sends")} link="/sends" icon="uil uil-truck fa-fw" />
+                    <CollapsableNavItem eventKey="/test1" title="Aplicaciones" icon="uil-apps">
                         <NavItem title={"prueba"} link="/test" />
                     </CollapsableNavItem>
                     {/*{
@@ -93,22 +94,20 @@ export const Sidebar = ({ children }: ContextProps) => {
                             </CollapsableNavItem>
                         </>)
                     }*/}
-                    {/*<NavItem title={t('support')} link={SOPORTE_URL} external icon="uil-comment-question" />
-                    <NavItem title={t('faq')} external link={FAQ_URL} icon="uil-question-circle" />*/}
                 </ul>
             </aside>
             <section id="wrapper" className={`${fullWidth ? 'fullwidth' : ''}`}>
                 <nav className="navbar navbar-expand-md">
                     <Container fluid className="mx-2">
                         <div className="navbar-header">
-                            <Button type="button" className="navbar-toggler" onClick={() => setFullWidth(!fullWidth)}>
+                            <Button variant="none" type="button" className="navbar-toggler" onClick={() => setFullWidth(!fullWidth)}>
                                 <i className="uil-bars" />
                             </Button>
                             <Link to="/home" className="navbar-brand">
                                 <Logo width="80px" transparent className="img-fluid" />
                             </Link>
                         </div>
-                        <Button type="button" className='navbar-toggler ml-auto' onClick={() => setOpenCollapse(!openCollapse)}
+                        <Button type="button" variant="none" className='navbar-toggler ml-auto' onClick={() => setOpenCollapse(!openCollapse)}
                             aria-controls="toggle-navbar"
                             aria-expanded={openCollapse}
                         >
@@ -117,6 +116,9 @@ export const Sidebar = ({ children }: ContextProps) => {
                         <Collapse className="navbar-collapse" in={openCollapse}>
                             <div id="toggle-navbar">
                                 <ul className="navbar-nav ms-auto">
+                                    <li className="nav-item" style={{ marginRight: '20px' }}>
+                                        <NotificationDropdown />
+                                    </li>
                                     <li className="nav-item">
                                         <select value={i18n.language} className="form-select form-select-sm mt-2" onChange={handleUpdateLang}>
                                             <option value="en">{t("english")}</option>
@@ -130,17 +132,11 @@ export const Sidebar = ({ children }: ContextProps) => {
                                     </li>
                                     <Dropdown placement="bottom-start" as={'li'} className="nav-item" id="toggle-navbar">
                                         <Dropdown.Toggle to={'#'} type="button" className="nav-link" id="dropdown-menu" as={Link} >
-                                            Menù
+                                            {t("menu")}
                                         </Dropdown.Toggle>
                                         <Dropdown.Menu as='ul'>
                                             <li>
-                                                <Dropdown.Item className="dropdown-item" as={Link} to="/profile">Perfil</Dropdown.Item>
-                                            </li>
-                                            <li>
-                                                <hr className="dropdown-divider" />
-                                            </li>
-                                            <li>
-                                                <Dropdown.Item onClick={LogOut} >Cerrar sesión</Dropdown.Item>
+                                                <Dropdown.Item onClick={LogOut} >{t("logout")}</Dropdown.Item>
                                             </li>
                                         </Dropdown.Menu>
                                     </Dropdown>
