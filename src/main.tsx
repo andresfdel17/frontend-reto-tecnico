@@ -49,6 +49,9 @@ console.warn = (...args) => {
     if (typeof args[0] === 'string' && args[0].includes('React Router Future')) {
         return; // ignora warnings de React Router
     }
+    if (typeof args[0] === 'string' && args[0].includes('aria-hidden')) {
+        return; // ignora warnings de React Router
+    }
     originalWarn(...args); // muestra los demás
 };
 

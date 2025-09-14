@@ -2,10 +2,12 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSocket } from './useSocket';
 import { useAuth } from '@contexts';
 import type { INotification } from '@types';
+import { useTranslation } from 'react-i18next';
 
 export function useNotifications() {
     const [notifications, setNotifications] = useState<INotification[]>([]);
     const [unreadCount, setUnreadCount] = useState(0);
+    const { t } = useTranslation();
     const { token } = useAuth();
     const socket = useSocket('http://localhost:3000');
 
@@ -104,6 +106,25 @@ export function useNotifications() {
                     message: data.message,
                     type: data.type || 'info',
                     timestamp: data.timestamp,
+                    from: data.from || 'system',
+                });
+            });
+
+            socket.on('new-send-notification', (data) => {
+                addNotification({
+                    message: t('new-send-notification-message', {unique_id: data.unique_id }),
+                    type: data.type || 'info',
+                    timestamp: data.timestamp, 
+                    from: data.from || 'system',
+                });
+            });
+
+            socket.on('send-updated-notification', (data) => {
+                const message = data.newState === 2 ? t('on-transit-text', {unique_id: data.unique_id }) : data.newState === 3 ? t('delivered-text', {unique_id: data.unique_id }) : t('cancelled-text', {unique_id: data.unique_id });
+                addNotification({
+                    message: message,
+                    type: data.type || 'info',
+                    timestamp: data.timestamp, 
                     from: data.from || 'system',
                 });
             });

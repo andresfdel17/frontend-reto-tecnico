@@ -52,7 +52,7 @@ export const useNotify = () => {
     }
     const DelAlert = async (props: IConfirmProps) => {
         const {
-            title = process.env.REACT_APP_APP_NAME,
+            title = APP_NAME,
             text = "Alert",
             onConfirm = () => { },
             onCancel = () => { },

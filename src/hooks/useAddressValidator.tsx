@@ -16,15 +16,20 @@ export function useAddressValidator(apiKey?: string) {
                 errors: [error]
             };
         }
+        if (request.address === '') {
+            return {
+                isValid: false,
+                errors: ['Address is required']
+            };
+        }
 
         setIsValidating(true);
-        
+
         try {
             const requestBody = {
                 address: {
                     addressLines: [request.address],
                     regionCode: request.regionCode || 'CO', // Colombia por defecto
-                    locality: request.locality,
                 },
                 enableUspsCass: request.enableUspsCass || false,
             };
@@ -45,11 +50,9 @@ export function useAddressValidator(apiKey?: string) {
             }
 
             const data = await response.json();
-            
             // Procesar la respuesta de Google
             const result = processGoogleResponse(data);
             setLastResult(result);
-            
             return result;
 
         } catch (error) {
@@ -85,21 +88,18 @@ export function useAddressValidator(apiKey?: string) {
 function processGoogleResponse(data: any): IAddressValidationResult {
     try {
         const result = data.result;
-        
+
         if (!result) {
             return {
                 isValid: false,
                 errors: ['No result returned from Google API']
             };
         }
-
         // Verificar si la dirección fue validada
-        const verdict = result.verdict;
+        const verdict = result.verdict ?? false;
         const isValid = verdict?.addressComplete && verdict?.hasUnconfirmedComponents !== true;
-
         // Extraer la dirección formateada
         const formattedAddress = result.address?.formattedAddress;
-
         // Extraer componentes de la dirección
         const addressComponents = result.address?.addressComponents || [];
         const components: IAddressValidationResult['components'] = {};

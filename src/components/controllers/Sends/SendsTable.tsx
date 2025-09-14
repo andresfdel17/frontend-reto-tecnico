@@ -3,7 +3,7 @@ import type { TableColumn } from "react-data-table-component";
 import { GeneralDatatable } from "../../general";
 import { Badge, Button, ButtonGroup, Col, Row } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faBan, faCheck, faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { memo } from "react";
 import { usePermissions } from "@hooks";
 import { useTranslation } from "react-i18next";
@@ -13,7 +13,7 @@ const ExpandableComponent = memo(({ data }: IExpansableComponentParams<any>) => 
         <div className='p-3'>
             hola
             <Row>
-               
+
             </Row>
         </div>
     )
@@ -32,17 +32,22 @@ const SendsTableComponent = (props: ITableUseParams<IUserSaved>) => {
         },
         {
             name: t("reference"),
-            width: "200px",
+            width: "300px",
             sortable: true,
             selector: (row) => row?.reference,
         },
         {
-            name: t("units"),
+            name: t("address"),
             sortable: true,
-            width: "100px",
-            selector: (row) => row?.units,
+            selector: (row) => row?.address,
         },
         {
+            name: t("units"),
+            sortable: true,
+            width: "200px",
+            selector: (row) => row?.units,
+        },
+        /*{
             name: t("creation_date"),
             sortable: true,
             selector: (row) => {
@@ -55,7 +60,7 @@ const SendsTableComponent = (props: ITableUseParams<IUserSaved>) => {
                 const second = date.getSeconds();
                 return `${day}/${month}/${year} ${hour}:${minute}:${second}`;
             },
-        },
+        },*/
         {
             name: t("state"),
             width: "100px",
@@ -98,22 +103,30 @@ const SendsTableComponent = (props: ITableUseParams<IUserSaved>) => {
                 return (
                     <>
                         <ButtonGroup aria-label="Basic example">
-                            <Button
-                                size="sm"
-                                variant="warning"
-                                onClick={() => props?.onEdit && props?.onEdit(row.id)}
-                            >
-                                <FontAwesomeIcon icon={faEdit} />
-                            </Button>
-
-                            <Button
-                                size="sm"
-                                variant={row?.status === 0 ? "success" : "danger"}
-                                title={row?.status === 0 ? "Habilitar usuario" : "Deshabilitar usuario"}
-                                onClick={() => props?.onDelete && (row?.status === 0 ? props?.onDelete(row.id, true) : props?.onDelete(row.id))}
-                            >
-                                <FontAwesomeIcon icon={row?.status === 0 ? faCheck : faTrashAlt} />
-                            </Button>
+                            {
+                                !validatePermissions() && row?.state === 1 && (
+                                    <Button
+                                        size="sm"
+                                        variant="danger"
+                                        onClick={() => props?.onEdit && props?.onEdit(row.id)}
+                                        title={t("cancel")}
+                                    >
+                                        <FontAwesomeIcon icon={faBan} />
+                                    </Button>
+                                )
+                            }
+                            {
+                                validatePermissions() && ![4].includes(row?.state) && (
+                                    <Button
+                                        size="sm"
+                                        variant={row?.state === 3 ? "success" : "warning"}
+                                        title={row?.state !== 3 ? t("change-status") : t("delivered")}
+                                        onClick={() => row?.state !== 3 ? (props?.onDelete &&  props?.onDelete(row.id)) : null}
+                                    >
+                                        <FontAwesomeIcon icon={row?.state === 3 ? faCheck : faEdit} />
+                                    </Button>
+                                )
+                            }
                         </ButtonGroup>
                     </>
                 );
@@ -129,7 +142,7 @@ const SendsTableComponent = (props: ITableUseParams<IUserSaved>) => {
             customProps={{
                 defaultSortFieldId: "id",
                 defaultSortAsc: false,
-                expandableRows: true,
+                expandableRows: validatePermissions(),
                 ...(validatePermissions() && { expandableRowsComponent: ExpandableComponent }),
                 // Server-side pagination
                 ...(props.total !== undefined && {
@@ -139,10 +152,10 @@ const SendsTableComponent = (props: ITableUseParams<IUserSaved>) => {
                     paginationDefaultPage: props.page || 1,
                     paginationPerPage: props.rowsPerPage || 10,
                     paginationComponentOptions: {
-                        rowsPerPageText: 'Filas por página',
-                        rangeSeparatorText: 'de',
+                        rowsPerPageText: t('records-by-page'),
+                        rangeSeparatorText: t('range-separator'),
                         selectAllRowsItem: true,
-                        selectAllRowsItemText: 'Todos',
+                        selectAllRowsItemText: t('select-all-rows'),
                     },
                     onChangeRowsPerPage: props.onChangeRowsPerPage,
                     onChangePage: props.onPageChange,
