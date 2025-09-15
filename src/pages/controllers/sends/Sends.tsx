@@ -1,19 +1,21 @@
 import { FullLoader } from "@components"
 import { useAxios } from "@contexts"
-import { faInfo, faInfoCircle, faPlus, faSync } from "@fortawesome/free-solid-svg-icons"
+import { faInfoCircle, faPlus, faSync } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { useEffect, useState, type ChangeEvent } from "react"
+import { useEffect, useRef, useState, type ChangeEvent } from "react"
 import { Button, Col, FormControl, FormSelect, Modal, OverlayTrigger, Popover, Row, Spinner } from "react-bootstrap"
 import { useTranslation } from "react-i18next"
 import { SendsTable } from "@components"
 import { useAddressValidator, useDebounce, useForm, useNotify, usePermissions } from "@hooks"
 import { GCP_TOKEN } from "@utils"
+import type { ISend, IUser, IDriver, IRouteWithVehicle } from "@types"
+import { SendState, SEND_STATES } from "@types"
 
-const states: { id: number, name: string }[] = [
-  { id: 1, name: "on-wait" },
-  { id: 2, name: "on-transit" },
-  { id: 3, name: "delivered" },
-  { id: 4, name: "cancelled" },
+const states: { id: SendState, name: string }[] = [
+  { id: SendState.ON_WAIT, name: SEND_STATES[SendState.ON_WAIT] },
+  { id: SendState.ON_TRANSIT, name: SEND_STATES[SendState.ON_TRANSIT] },
+  { id: SendState.DELIVERED, name: SEND_STATES[SendState.DELIVERED] },
+  { id: SendState.CANCELLED, name: SEND_STATES[SendState.CANCELLED] },
 ]
 
 export const Sends = () => {
@@ -26,10 +28,13 @@ export const Sends = () => {
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [pendingPage, setPendingPage] = useState(false);
   const [filter, setFilter] = useState<Record<string, string | number>>({ page });
-  const [users, setUsers] = useState<{ id: number, name: string }[]>([]);
-  const [sends, setSends] = useState([]);
+  const [users, setUsers] = useState<IUser[]>([]);
+  const [sends, setSends] = useState<ISend[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [validDataEdit, setValidDataEdit] = useState(false);
+  const [editSend, setEditSend] = useState<ISend | null>(null);
   const handleCloseCreateModal = () => {
     setShowCreateModal(false);
     setSuggestAddress('');
@@ -37,6 +42,16 @@ export const Sends = () => {
     setConfidence('NONE');
   }
   const handleShowCreateModal = () => setShowCreateModal(true);
+  const handleShowEditModal = () => {
+    setShowEditModal(true);
+  };
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setEditSend(null);
+    setValidDataEdit(false);
+    setErrorEdit(null);
+    setErrorRouteEdit(null);
+  };
   const [validateLocation, setValidateLocation] = useState(false);
   const [loading, setLoading] = useState(false);
   const { validatePermissions } = usePermissions();
@@ -45,6 +60,14 @@ export const Sends = () => {
   const [confidence, setConfidence] = useState<string>('NONE');
   const [suggestAddress, setSuggestAddress] = useState('');
   const [loadingSave, setLoadingSave] = useState(false);
+  const [loadingEdit, setLoadingEdit] = useState(false);
+  const [driversSaved, setDriversSaved] = useState<IDriver[]>([]);
+  const [routesSaved, setRoutesSaved] = useState<IRouteWithVehicle[]>([]);
+  const routeRef = useRef<HTMLSelectElement>(null);
+  const driverRef = useRef<HTMLSelectElement>(null);
+  const stateRef = useRef<HTMLSelectElement>(null);
+  const [errorEdit, setErrorEdit] = useState<string | null>(null);
+  const [errorRouteEdit, setErrorRouteEdit] = useState<string | null>(null);
   useEffect(() => {
     document.title = t("sends");
     getAllData();
@@ -80,10 +103,14 @@ export const Sends = () => {
       limit: rowsPerPage
     };
     setPendingPage(true);
-    const [{ data: sends }, { data: users }] = await Promise.all([
+    const [{ data: sends }, { data: users }, { data: drivers }, { data: routes }] = await Promise.all([
       privateFetch.post(`/sends/getSendsFiltered`, requestData),
-      privateFetch.get(`/users/getAllUsers`)
+      privateFetch.get(`/users/getAllUsers`),
+      privateFetch.get(`/general/drivers`),
+      privateFetch.get(`/general/routes`)
     ])
+    setDriversSaved(drivers.data);
+    setRoutesSaved(routes.data);
     setPendingPage(false);
     setSends(sends.data);
     setUsers(users.data);
@@ -167,6 +194,53 @@ export const Sends = () => {
     });
 
   }
+  const changeValidDataEdit = () => {
+    if (editSend?.state === SendState.ON_TRANSIT && stateRef.current?.value === String(SendState.DELIVERED)) {
+      setValidDataEdit(true);
+      return;
+    }
+    const driverActual = driverRef.current?.value ?? null;
+    const routeActual = routeRef.current?.value ?? null;
+    if (!['', null].includes(driverActual) && !['', null].includes(routeActual)) {
+      setValidDataEdit(true);
+    } else {
+      setValidDataEdit(false);
+    }
+  }
+  const editSendDialog = async (id: number) => {
+    const data = sends.find(send => send.id === id);
+    if (data?.state === SendState.ON_TRANSIT) setValidDataEdit(true);
+    setEditSend(data ?? null);
+    handleShowEditModal();
+  }
+  const editSendAction = async (ev: React.FormEvent<HTMLFormElement>) => {
+    ev.preventDefault();
+    setLoadingEdit(true);
+    const formData = {
+      ...serialize(ev.target as HTMLFormElement),
+      ...(editSend?.state === SendState.ON_WAIT && ({
+        route_id: routeRef.current?.value ?? null,
+        driver_id: driverRef.current?.value ?? null,
+      }))
+    };
+    const { data } = await privateFetch.put(`/sends/update/${editSend?.id}`, formData);
+    console.log(data);
+    if (data?.code === 400) {
+      const texto = data?.text;
+      const errorWords = ['route', 'vehicle'];
+      const haveSomeone = errorWords.some(word => texto.includes(word));
+      if(haveSomeone) setErrorRouteEdit(data?.text);
+      if(data?.text?.includes('driver')) setErrorEdit(data?.text);
+      setLoadingEdit(false);
+      return;
+    }
+    //notify(data);
+    setEditSend(null);
+    setValidDataEdit(false);
+    getAllData();
+    handleCloseEditModal();
+    setLoadingEdit(false);
+  }
   return (
     <>
       <Row className="mt-2 mb-2">
@@ -204,18 +278,23 @@ export const Sends = () => {
           </Col>
         )}
       </Row>
-      {loading ? (<FullLoader />) : (
-        <SendsTable
-          data={sends}
-          total={total}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          pending={pendingPage}
-          onPageChange={onPageChange}
-          onChangeRowsPerPage={onChangeRowsPerPage}
-          onEdit={cancelSend}
-        />
-      )}
+      <Row>
+        <Col sm>
+          {loading ? (<FullLoader fullSize />) : (
+            <SendsTable
+              data={sends}
+              total={total}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              pending={pendingPage}
+              onPageChange={onPageChange}
+              onChangeRowsPerPage={onChangeRowsPerPage}
+              onEdit={cancelSend}
+              onDelete={editSendDialog}
+            />
+          )}
+        </Col>
+      </Row>
       <Modal show={showCreateModal} onHide={handleCloseCreateModal} animation={false}>
         <Modal.Header closeButton>
           <Modal.Title>{t('create-send')}</Modal.Title>
@@ -282,6 +361,83 @@ export const Sends = () => {
             </Button>
             <Button type="submit" size="sm" variant="primary" disabled={!validateLocation || isValidating}>
               {t('save-changes')} {loadingSave && <Spinner size="sm" animation="grow" variant="primary" />}
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal>
+      <Modal show={showEditModal} onHide={handleCloseEditModal} animation={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>{t('edit-send')}</Modal.Title>
+        </Modal.Header>
+        <form onSubmit={editSendAction} autoComplete="off">
+          <Modal.Body>
+            <Row>
+              <Col sm>
+                <label>{t('send')}</label>
+                <FormControl size="sm" readOnly className="mb-2" defaultValue={editSend?.unique_id ?? ''} />
+              </Col>
+            </Row>
+            {editSend?.state === SendState.ON_TRANSIT ? (
+              <Row>
+                <Col sm>
+                  <label>{t('state')}</label>
+                  <FormSelect size='sm' name='state' defaultValue={editSend?.state ?? ''} onChange={changeValidDataEdit} ref={stateRef}>
+                    <option value={SendState.ON_TRANSIT}>{t(SEND_STATES[SendState.ON_TRANSIT])}</option>
+                    <option value={SendState.DELIVERED}>{t(SEND_STATES[SendState.DELIVERED])}</option>
+                  </FormSelect>
+                </Col>
+              </Row>
+            ) : (
+              <>
+                <Row>
+                  <Col sm>
+                    <label>{t('route')}</label>
+                    <FormSelect className={`${errorRouteEdit ? 'is-invalid' : 'is-valid'}`} size='sm' defaultValue={editSend?.route_id ?? ''} onChange={() => {changeValidDataEdit(); setErrorRouteEdit(null)}} ref={routeRef}>
+                      <option value="">{t('routes')}</option>
+                      {routesSaved?.map((val, id) => (
+                        <option key={id} value={val.id}>
+                          {val.code}
+                        </option>
+                      ))}
+                    </FormSelect>
+                    {errorRouteEdit && (
+                      <div className="d-flex justify-content-between align-items-center">
+                        <small className={`${errorRouteEdit ? 'text-danger' : 'text-success'}`}>
+                          {errorRouteEdit ? t(errorRouteEdit) : t('valid-route')}
+                        </small>
+                      </div>
+                    )}
+                  </Col>
+                </Row>
+                <Row>
+                  <Col sm>
+                    <label>{t('driver')}</label>
+                    <FormSelect size='sm' className={`${errorEdit ? 'is-invalid' : 'is-valid'}`} defaultValue={editSend?.driver_id ?? ''} onChange={() => {changeValidDataEdit(); setErrorEdit(null)}} ref={driverRef}>
+                      <option value="">{t('drivers')}</option>
+                      {driversSaved?.map((val, id) => (
+                        <option key={id} value={val.id}>
+                          {val.name}
+                        </option>
+                      ))}
+                    </FormSelect>
+                    {errorEdit && (
+                      <div className="d-flex justify-content-between align-items-center">
+                        <small className={`${errorEdit ? 'text-danger' : 'text-success'}`}>
+                          {errorEdit ? t(errorEdit) : t('valid-driver')}
+                        </small>
+                      </div>
+                    )}
+                  </Col>
+                </Row>
+              </>
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button size="sm" variant="secondary" onClick={handleCloseEditModal}>
+              {t('close')}
+            </Button>
+            <Button type="submit" size="sm" variant="primary" disabled={loadingEdit || !validDataEdit}>
+              {t('save-changes')} {loadingEdit && <Spinner size="sm" animation="grow" variant="primary" />}
             </Button>
           </Modal.Footer>
         </form>

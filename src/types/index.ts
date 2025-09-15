@@ -4,4 +4,6 @@ export * from './hooks.types';
 export * from './lib.types';
 export * from './components.type';
 export * from './sucursales.types';
+export * from './general.types';
+export * from './controllers.types';
 export * from './hooks';

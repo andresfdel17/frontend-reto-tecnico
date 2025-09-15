@@ -71,5 +71,16 @@
     "cancelled-text": "Envío cancelado con id: {{unique_id}}",
     "on-transit-text": "Envío en tránsito con id: {{unique_id}}",
     "delivered-text": "Envío entregado con id: {{unique_id}}",
-    "send-updated": "Envío actualizado"
+    "send-updated": "Envío actualizado",
+    "edit-send": "Editar envío",
+    "routes": "Rutas",
+    "drivers": "Conductores",
+    "route": "Ruta",
+    "driver": "Conductor",
+    "send": "Envío",
+    "vehicle-capacity-exceeded": "Capacidad del vehículo excedida",
+    "route-not-found": "La ruta especificada no existe",
+    "route-has-no-vehicle-assigned": "La ruta seleccionada no tiene un vehículo asignado",
+    "driver-not-available": "El conductor no está disponible, ya está asignado a otro envío",
+    "driver-not-found": "El conductor especificado no existe"
 }

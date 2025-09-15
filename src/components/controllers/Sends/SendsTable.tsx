@@ -1,14 +1,16 @@
-import type { IExpansableComponentParams, ITableUseParams, IUserSaved } from "@types";
+import type { IExpansableComponentParams, ITableUseParams } from "@types";
+import type { ISend } from "@types";
 import type { TableColumn } from "react-data-table-component";
 import { GeneralDatatable } from "../../general";
-import { Badge, Button, ButtonGroup, Col, Row } from "react-bootstrap";
+import { Badge, Button, ButtonGroup, Row } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBan, faCheck, faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faBan, faCheck, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { memo } from "react";
 import { usePermissions } from "@hooks";
 import { useTranslation } from "react-i18next";
 
-const ExpandableComponent = memo(({ data }: IExpansableComponentParams<any>) => {
+const ExpandableComponent = memo((data: IExpansableComponentParams<any>) => {
+    console.log(data);
     return (
         <div className='p-3'>
             hola
@@ -19,7 +21,7 @@ const ExpandableComponent = memo(({ data }: IExpansableComponentParams<any>) => 
     )
 });
 
-const SendsTableComponent = (props: ITableUseParams<IUserSaved>) => {
+const SendsTableComponent = (props: ITableUseParams<ISend>) => {
     const { t } = useTranslation();
     const { validatePermissions } = usePermissions();
     const columns: TableColumn<any>[] = [

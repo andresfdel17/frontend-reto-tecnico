@@ -71,5 +71,16 @@
     "cancelled-text": "Send cancelled with id: {{unique_id}}",
     "on-transit-text": "Send on transit with id: {{unique_id}}", 
     "delivered-text": "Send delivered with id: {{unique_id}}",
-    "send-updated": "Send updated"
+    "send-updated": "Send updated",
+    "edit-send": "Edit send",
+    "routes": "Routes",
+    "drivers": "Drivers",
+    "route": "Route",
+    "driver": "Driver",
+    "send": "Send",
+    "vehicle-capacity-exceeded": "Vehicle capacity exceeded",
+    "route-not-found": "The specified route does not exist",
+    "route-has-no-vehicle-assigned": "The selected route has no vehicle assigned",
+    "driver-not-available": "Driver is not available, already assigned to another shipment",
+    "driver-not-found": "The specified driver does not exist"
 }
