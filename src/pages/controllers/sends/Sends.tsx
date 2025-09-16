@@ -224,7 +224,6 @@ export const Sends = () => {
       }))
     };
     const { data } = await privateFetch.put(`/sends/update/${editSend?.id}`, formData);
-    console.log(data);
     if (data?.code === 400) {
       const texto = data?.text;
       const errorWords = ['route', 'vehicle'];
@@ -234,7 +233,7 @@ export const Sends = () => {
       setLoadingEdit(false);
       return;
     }
-    //notify(data);
+    notify(data);
     setEditSend(null);
     setValidDataEdit(false);
     getAllData();

@@ -81,6 +81,36 @@ export const SendState = {
 
 export type SendState = typeof SendState[keyof typeof SendState];
 
+// Interfaces para Dashboard y Gráficos
+export interface ChartStats {
+    created: number;
+    inTransit: number;
+    delivered: number;
+    cancelled: number;
+    total: number;
+}
+
+export interface ChartData {
+    chartData: any;
+    stats: ChartStats;
+    period: number;
+    dateRange: {
+        start: string;
+        end: string;
+    };
+    filters: {
+        user_id: number | null;
+        isAdmin: boolean;
+    };
+}
+
+export interface User {
+    id: number;
+    name: string;
+    email: string;
+    rol_id?: number;
+}
+
 // Mapeo de estados para mostrar en UI
 export const SEND_STATES = {
     [SendState.ON_WAIT]: 'on-wait',

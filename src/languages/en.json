@@ -112,5 +112,18 @@
     "cancelled-shipment-note": "This shipment has been cancelled. Red elements indicate the cancelled status.",
     "tracking-number-required": "Tracking number is required",
     "tracking-error": "Error fetching shipment",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "dashboard": "Dashboard",
+    "shipments-overview": "Shipments Overview",
+    "created": "Created",
+    "in-transit": "In Transit",
+    "total-shipments": "Total Shipments",
+    "shipments-timeline": "Shipments Timeline",
+    "period": "Period",
+  "last-7-days": "Last 7 days",
+  "last-15-days": "Last 15 days",
+  "last-30-days": "Last 30 days",
+  "all-users": "All users",
+  "refresh": "Refresh",
+    "charts-data-retrieved": "Chart data retrieved successfully"
 }

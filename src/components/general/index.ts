@@ -4,3 +4,4 @@ export * from "./TimeLoader";
 export * from "./Timer";
 export * from "./FullLoader";
 export * from "./Tables";
+export * from "./Charts";

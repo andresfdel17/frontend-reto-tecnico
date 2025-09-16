@@ -102,3 +102,18 @@ export interface IUsersNotifyData<T = any> extends INotifyProps {
 export interface ICreateUpdateUserProps {
   edit?: boolean;
 }
+
+// Tipos para componentes de gráficas
+export interface ShipmentsChartProps {
+  data: {
+    labels: string[];
+    datasets: {
+      label: string;
+      data: number[];
+      borderColor: string;
+      backgroundColor: string;
+      tension: number;
+    }[];
+  };
+  loading?: boolean;
+}

@@ -8,6 +8,7 @@ import { faBan, faCheck, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { memo } from "react";
 import { usePermissions } from "@hooks";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "@contexts";
 
 const ExpandableComponent = memo((data: IExpansableComponentParams<any>) => {
     console.log(data);
@@ -24,6 +25,7 @@ const ExpandableComponent = memo((data: IExpansableComponentParams<any>) => {
 const SendsTableComponent = (props: ITableUseParams<ISend>) => {
     const { t } = useTranslation();
     const { validatePermissions } = usePermissions();
+    const { user } = useAuth();
     const columns: TableColumn<any>[] = [
         {
             id: 'id',
@@ -106,7 +108,7 @@ const SendsTableComponent = (props: ITableUseParams<ISend>) => {
                     <>
                         <ButtonGroup aria-label="Basic example">
                             {
-                                !validatePermissions() && row?.state === 1 && (
+                                (!validatePermissions() && row?.state === 1) || (row?.user_id === user?.id && row?.state === 1) && (
                                     <Button
                                         size="sm"
                                         variant="danger"

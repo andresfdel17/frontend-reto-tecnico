@@ -112,5 +112,18 @@
     "cancelled-shipment-note": "Este envío ha sido cancelado. Los elementos en rojo indican el estado cancelado.",
     "tracking-number-required": "El número de seguimiento es requerido",
     "tracking-error": "Error al consultar el envío",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
+    "dashboard": "Dashboard",
+    "shipments-overview": "Resumen de Envíos",
+    "created": "Creados",
+    "in-transit": "En Tránsito",
+    "total-shipments": "Total de Envíos",
+    "shipments-timeline": "Línea de Tiempo de Envíos",
+    "period": "Período",
+    "last-7-days": "Últimos 7 días",
+    "last-15-days": "Últimos 15 días",
+    "last-30-days": "Últimos 30 días",
+    "all-users": "Todos los usuarios",
+  "refresh": "Actualizar",
+    "charts-data-retrieved": "Datos de gráficas obtenidos exitosamente"
 }
