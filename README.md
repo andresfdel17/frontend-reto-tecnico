@@ -176,13 +176,224 @@ yarn dev
 - Validación de permisos (usuarios solo ven sus envíos)
 
 ### 🌐 **Características Técnicas**
-- **Internacionalización** (i18n) - Español e Inglés
+- **Internacionalización** (i18n) - Español, Inglés y Francés
 - **Socket.IO** para actualizaciones en tiempo real
 - **Responsive Design** con Bootstrap
 - **TypeScript** para tipado estricto
 - **Context API** para manejo de estado global
 - **Hooks personalizados** para lógica reutilizable
 - **Validación de permisos** por rol de usuario
+
+## 🌍 Internacionalización (i18n)
+
+El proyecto soporta múltiples idiomas usando **react-i18next**. Actualmente incluye:
+
+- 🇪🇸 **Español** (`es`) - Idioma por defecto
+- 🇺🇸 **Inglés** (`en`) - Idioma de respaldo
+- 🇫🇷 **Francés** (`fr`) - Ejemplo de extensión
+
+### 📝 **Estructura de Archivos de Idioma**
+
+Los diccionarios se encuentran en `src/languages/`:
+
+```
+src/languages/
+├── es.json    # Español
+├── en.json    # Inglés
+└── fr.json    # Francés (ejemplo)
+```
+
+### ⚙️ **Configuración i18n**
+
+La configuración se encuentra en `src/i18n.ts`:
+
+```typescript
+import i18n from "i18next";
+import detector from "i18next-browser-languagedetector";
+import { initReactI18next } from "react-i18next";
+
+// Importar traducciones
+import en from "./languages/en.json";
+import es from "./languages/es.json";
+import fr from "./languages/fr.json";
+
+const resources = {
+  en: { translation: en },
+  es: { translation: es },
+  fr: { translation: fr }
+};
+
+i18n
+  .use(detector)
+  .use(initReactI18next)
+  .init({
+    resources,
+    supportedLngs: ["en", "es", "fr"],
+    fallbackLng: "en",
+    keySeparator: false,
+    nsSeparator: false,
+    interpolation: {
+      escapeValue: false
+    }
+  });
+```
+
+### 🆕 **Cómo Agregar un Nuevo Idioma**
+
+#### **Paso 1: Crear el archivo de diccionario**
+
+Crea un nuevo archivo JSON en `src/languages/`. Por ejemplo, para italiano (`it.json`):
+
+```json
+{
+    "dic-index": "Italiano",
+    "english": "Inglese",
+    "spanish": "Spagnolo", 
+    "french": "Francese",
+    "italian": "Italiano",
+    "login": "Accedi",
+    "register": "Registrati",
+    "username": "Nome utente",
+    "password": "Password",
+    "admin": "Amministratore",
+    "user": "Utente",
+    "email": "Email",
+    "full-name": "Nome completo",
+    "success": "Successo",
+    "error": "Errore",
+    "logout": "Disconnetti",
+    "menu": "Menu",
+    "home": "Casa",
+    "dashboard": "Cruscotto",
+    "sends": "Invii",
+    "drivers": "Autisti",
+    "tracking": "Tracciamento",
+    "created": "Creati",
+    "in-transit": "In transito",
+    "delivered": "Consegnati",
+    "cancelled": "Annullati"
+    // ... resto de traducciones
+}
+```
+
+#### **Paso 2: Actualizar la configuración i18n**
+
+Modifica `src/i18n.ts`:
+
+```typescript
+// 1. Importar el nuevo idioma
+import it from "./languages/it.json";
+
+// 2. Agregarlo a resources
+const resources = {
+  en: { translation: en },
+  es: { translation: es },
+  fr: { translation: fr },
+  it: { translation: it }  // ← Nuevo idioma
+};
+
+// 3. Agregarlo a supportedLngs
+i18n.init({
+  // ...
+  supportedLngs: ["en", "es", "fr", "it"], // ← Incluir aquí
+  // ...
+});
+```
+
+#### **Paso 3: Actualizar otros archivos de idioma**
+
+Agregar la traducción del nuevo idioma en todos los diccionarios existentes:
+
+**`es.json`:**
+```json
+{
+  "italian": "Italiano"
+  // ... resto de traducciones
+}
+```
+
+**`en.json`:**
+```json
+{
+  "italian": "Italian"
+  // ... resto de traducciones
+}
+```
+
+**`fr.json`:**
+```json
+{
+  "italian": "Italien"
+  // ... resto de traducciones
+}
+```
+
+### 🔧 **Uso en Componentes**
+
+```typescript
+import { useTranslation } from 'react-i18next';
+
+function MiComponente() {
+  const { t, i18n } = useTranslation();
+
+  // Traducción simple
+  const titulo = t('login'); // → "Iniciar sesión" (ES)
+
+  // Cambiar idioma programáticamente
+  const cambiarIdioma = (idioma: string) => {
+    i18n.changeLanguage(idioma);
+  };
+
+  // Interpolación de variables
+  const mensaje = t('showing-notifications', { count: 5 });
+  // → "Mostrando 10 de 5 notificaciones"
+
+  return (
+    <div>
+      <h1>{titulo}</h1>
+      <button onClick={() => cambiarIdioma('fr')}>
+        {t('french')}
+      </button>
+      <p>{mensaje}</p>
+    </div>
+  );
+}
+```
+
+### 📋 **Claves de Traducción Importantes**
+
+#### **Navegación y UI**
+- `login`, `logout`, `menu`, `home`, `dashboard`
+- `search`, `create`, `edit`, `delete`, `save`, `cancel`
+- `loading`, `no-data`, `try-again`
+
+#### **Estados de Envíos**
+- `created`, `in-transit`, `delivered`, `cancelled`
+- `waiting`, `tracking`, `shipments`
+
+#### **Formularios**
+- `username`, `password`, `email`, `full-name`
+- `required-field`, `invalid-email`, `form-validation-error`
+
+#### **Mensajes del Sistema**
+- `success`, `error`, `warning`, `server-error`
+- `unauthorized`, `forbidden`, `not-found`
+
+### 🌐 **Detección Automática de Idioma**
+
+El sistema detecta automáticamente el idioma del navegador usando `i18next-browser-languagedetector`:
+
+1. **Configuración del navegador** (preferencia principal)
+2. **LocalStorage** (idioma seleccionado previamente)
+3. **Idioma de respaldo** (`en` - inglés)
+
+### 💡 **Mejores Prácticas**
+
+1. **Usa claves descriptivas**: `user-created` en lugar de `msg1`
+2. **Mantén consistencia**: Usa el mismo estilo en todas las traducciones
+3. **Interpola variables**: `"showing-notifications": "Mostrando {{count}} notificaciones"`
+4. **Agrupa por contexto**: `login-error`, `login-success`, `login-required`
+5. **Traduce todos los idiomas**: Mantén sincronizados todos los diccionarios
 
 ## 📁 Estructura
 
@@ -192,7 +403,11 @@ yarn dev
   - `contexts/` - Context providers (Auth, Axios, Theme)
   - `hooks/` - Hooks personalizados
   - `types/` - Definiciones de TypeScript
-  - `languages/` - Archivos de traducción
+  - `languages/` - **Archivos de traducción i18n**
+    - `es.json` - Diccionario en español
+    - `en.json` - Diccionario en inglés  
+    - `fr.json` - Diccionario en francés (ejemplo)
+  - `i18n.ts` - **Configuración de internacionalización**
 - `scripts/` - Scripts de automatización Docker
 - `docker-compose.yml` - Configuración de contenedor
 - `Dockerfile` - Imagen del frontend

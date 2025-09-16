@@ -5,6 +5,7 @@ import { initReactI18next } from "react-i18next";
 //Traducciones
 import en from "./languages/en.json";
 import es from "./languages/es.json";
+import fr from "./languages/fr.json";
 
 const resources = {
   en: {
@@ -12,6 +13,9 @@ const resources = {
   },
   es: {
     translation: es
+  },
+  fr: {
+    translation: fr
   }
 };
 
@@ -20,7 +24,7 @@ i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
     resources,
-    supportedLngs: ["en", "es"],
+    supportedLngs: ["en", "es", "fr"],
     fallbackLng: "en", // use en if detected lng is not available
     keySeparator: false, // we do not use keys in form messages.welcome
     nsSeparator: false,
