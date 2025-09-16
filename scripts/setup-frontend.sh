@@ -10,15 +10,46 @@ if [ ! -f ".env" ]; then
     echo "📝 Creando archivo .env desde .env.example..."
     if [ -f ".env.example" ]; then
         cp .env.example .env
-        echo "✅ Archivo .env creado"
+        echo "✅ Archivo .env creado desde .env.example"
+        echo "🔧 Configuración por defecto aplicada:"
+        echo "   - Frontend: http://localhost:3001"
+        echo "   - API Backend: http://localhost:3000/api"
+        echo "   - Socket.IO: http://localhost:3000"
     else
         echo "❌ Error: .env.example no encontrado"
-        exit 1
-    fi
-fi
+        echo "   Creando .env con configuración por defecto..."
+        cat > .env << 'EOF'
+# Configuración del Frontend React + Vite
 
-# Cargar variables de entorno
-source .env
+# URL de la API backend (con prefijo /api)
+VITE_API_URL=http://localhost:3000/api
+
+# URL de la aplicación backend (para Socket.IO)
+VITE_APP_URL=http://localhost:3000
+
+# Nombre de la aplicación
+VITE_APP_NAME=Reto Frontend
+
+# Entorno de desarrollo
+VITE_NODE_ENV=development
+
+# Puerto del frontend en Docker
+FRONTEND_PORT=3001
+
+# Token de Google Maps (limitado a 1000 requests diarias)
+VITE_GMAPS_KEY=AIzaSyA2sstJmncuvCTw2WUsBe6ykcA0WlnGJ3s
+
+# Configuración de desarrollo y debugging
+VITE_DEBUG_MODE=false
+VITE_STRICT_MODE=false
+VITE_SHOW_GRID=false
+VITE_LOG_LEVEL=info
+EOF
+        echo "✅ Archivo .env creado con configuración por defecto"
+    fi
+else
+    echo "✅ Archivo .env encontrado"
+fi
 
 echo "🔍 Verificando red Docker compartida..."
 
@@ -48,8 +79,8 @@ echo ""
 echo "🎉 ¡Frontend desplegado exitosamente!"
 echo ""
 echo "🔗 URLs disponibles:"
-echo "   - Frontend: http://localhost:${FRONTEND_PORT:-3001}"
-echo "   - API Backend: ${VITE_API_URL}"
+echo "   - Frontend: http://localhost:3001"
+echo "   - API Backend: http://localhost:3000/api"
 echo ""
 echo "🛠️ Comandos útiles:"
 echo "   - Ver logs: docker-compose logs -f"
