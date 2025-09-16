@@ -1,0 +1,314 @@
+.tracking-container {
+  padding: 2rem 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.tracking-card {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: 15px;
+}
+
+.tracking-card .card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 15px 15px 0 0 !important;
+  padding: 1.5rem;
+}
+
+.tracking-card .card-header h2 {
+  margin: 0;
+  font-weight: 300;
+}
+
+/* Language Selector Styles */
+.language-selector {
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.language-selector .language-select {
+  width: auto;
+  min-width: 120px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  font-size: 0.875rem;
+}
+
+.language-selector .language-select:focus {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+  color: white;
+}
+
+.language-selector .language-select option {
+  background-color: #667eea;
+  color: white;
+}
+
+.language-selector .fa-globe {
+  opacity: 0.8;
+}
+
+.tracking-results {
+  border-top: 1px solid #e9ecef;
+  padding-top: 1.5rem;
+}
+
+/* Tracking Steps Styles */
+.tracking-steps {
+  padding: 2rem 0;
+}
+
+.tracking-step {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.tracking-step:last-child {
+  margin-bottom: 0;
+}
+
+.step-indicator {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-right: 1.5rem;
+  flex-shrink: 0;
+  z-index: 2;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.step-indicator.completed {
+  background-color: #28a745;
+  color: white;
+  box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.2);
+}
+
+.step-indicator.current {
+  background-color: #007bff;
+  color: white;
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
+  animation: pulse 2s infinite;
+}
+
+.step-indicator.pending {
+  background-color: #e9ecef;
+  color: #6c757d;
+  border: 2px solid #dee2e6;
+}
+
+.step-indicator.cancelled {
+  background-color: #dc3545;
+  color: white;
+  box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.2);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(0, 123, 255, 0.1);
+  }
+  100% {
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
+  }
+}
+
+.step-content {
+  flex: 1;
+  padding-top: 0.5rem;
+}
+
+.step-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.step-title.completed {
+  color: #28a745;
+}
+
+.step-title.current {
+  color: #007bff;
+}
+
+.step-title.pending {
+  color: #6c757d;
+}
+
+.step-title.cancelled {
+  color: #dc3545;
+}
+
+.step-datetime {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.step-line {
+  position: absolute;
+  left: 24px;
+  top: 50px;
+  width: 2px;
+  height: calc(100% + 1rem);
+  transition: background-color 0.3s ease;
+}
+
+.step-line.completed {
+  background-color: #28a745;
+}
+
+.step-line.current {
+  background: linear-gradient(to bottom, #007bff 0%, #e9ecef 100%);
+}
+
+.step-line.pending {
+  background-color: #e9ecef;
+}
+
+.step-line.cancelled {
+  background-color: #dc3545;
+}
+
+/* Cancelled shipment styles */
+.tracking-steps.cancelled .step-indicator.completed,
+.tracking-steps.cancelled .step-indicator.current {
+  background-color: #dc3545;
+  box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.2);
+}
+
+.tracking-steps.cancelled .step-title.completed,
+.tracking-steps.cancelled .step-title.current {
+  color: #dc3545;
+}
+
+.tracking-steps.cancelled .step-line.completed,
+.tracking-steps.cancelled .step-line.current {
+  background-color: #dc3545;
+}
+
+/* Input group styles */
+.input-group .btn {
+  border-left: none;
+}
+
+.input-group .form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.input-group .form-control:focus + .btn {
+  border-color: #007bff;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .tracking-container {
+    padding: 1rem 0;
+  }
+  
+  .tracking-card .card-header {
+    padding: 1rem;
+  }
+  
+  .tracking-card .card-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .language-selector {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  
+  .language-selector .language-select {
+    min-width: 100px;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+  }
+  
+  .language-selector .fa-globe {
+    margin-bottom: 0.25rem;
+  }
+  
+  .step-indicator {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+    margin-right: 1rem;
+  }
+  
+  .step-line {
+    left: 19px;
+    top: 40px;
+  }
+  
+  .step-title {
+    font-size: 1rem;
+  }
+  
+  .step-datetime {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tracking-card .card-header .d-flex {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .language-selector {
+    margin-top: 1rem;
+    flex-direction: row;
+    justify-content: center;
+  }
+  
+  .language-selector .language-select {
+    margin-top: 0;
+    margin-left: 0.5rem;
+  }
+}
+
+/* Loading state */
+.btn:disabled {
+  cursor: not-allowed;
+}
+
+/* Alert customizations */
+.alert {
+  border-radius: 10px;
+  border: none;
+}
+
+.alert-info {
+  background-color: rgba(0, 123, 255, 0.1);
+  color: #004085;
+}
+
+.alert-danger {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #721c24;
+}
+
+.alert-warning {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: #856404;
+}

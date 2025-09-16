@@ -106,7 +106,7 @@ export const Sends = () => {
     const [{ data: sends }, { data: users }, { data: drivers }, { data: routes }] = await Promise.all([
       privateFetch.post(`/sends/getSendsFiltered`, requestData),
       privateFetch.get(`/users/getAllUsers`),
-      privateFetch.get(`/general/drivers`),
+      privateFetch.get(`/drivers/drivers`),
       privateFetch.get(`/general/routes`)
     ])
     setDriversSaved(drivers.data);

@@ -10,6 +10,7 @@ import { Logo } from "../general";
 import { NotificationDropdown } from "../notifications";
 import iconImg from "@assets/img/profile.png";
 import { useTranslation } from "react-i18next";
+import { usePermissions } from "@hooks";
 //import { usePermissions } from "@hooks";
 
 
@@ -18,7 +19,7 @@ export const Sidebar = ({ children }: ContextProps) => {
     const { theme, setTheme } = useTheme();
     const { user, LogOut } = useAuth();
     const { t, i18n } = useTranslation();
-    //const { validatePermissions } = usePermissions();
+    const { validatePermissions } = usePermissions();
     const [openCollapse, setOpenCollapse] = useState<boolean>(false);
     useEffect(() => {
         validateResponsive();
@@ -79,21 +80,13 @@ export const Sidebar = ({ children }: ContextProps) => {
                 <ul className="categories list-unstyled">
                     <NavItem title="Home" link="/home" icon="uil uil-estate fa-fw" />
                     <NavItem title={t("sends")} link="/sends" icon="uil uil-truck fa-fw" />
-                    <CollapsableNavItem eventKey="/test1" title="Aplicaciones" icon="uil-apps">
-                        <NavItem title={"prueba"} link="/test" />
-                    </CollapsableNavItem>
-                    {/*{
-                        validatePermissions(PANEL_ADMIN) && (<>
-                            <CollapsableNavItem eventKey="/admin" title="Administración" icon="uil-apps">
-                                {validatePermissions(GESTION_USUARIOS) && (
-                                    <NavItem title={"Usuarios"} link="/users" />
-                                )}
-                                {validatePermissions(GESTION_SUCURSALES) && (
-                                    <NavItem title={"Sucursales"} link="/sucursales" />
-                                )}
+                    {
+                        validatePermissions() && (<>
+                            <CollapsableNavItem eventKey="/admin" title={t("admin-menu")} icon="uil-apps">
+                                <NavItem title={t("drivers")} link="/drivers" />
                             </CollapsableNavItem>
                         </>)
-                    }*/}
+                    }
                 </ul>
             </aside>
             <section id="wrapper" className={`${fullWidth ? 'fullwidth' : ''}`}>

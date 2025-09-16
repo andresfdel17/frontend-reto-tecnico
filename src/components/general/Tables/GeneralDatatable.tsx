@@ -88,6 +88,7 @@ const GeneralDatatableComponent = <T = any>({ showFilters = true, showFilterId =
         </Col>
       </Row>
     );
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterText, filterId, handleClear, handleClearId, showFilterId]);
   const paginationComponentOptions = useMemo(() => ({
     rowsPerPageText: 'Filas por página',

@@ -72,12 +72,14 @@ export interface IApiResponseWithPagination<T = any> extends IApiResponse<T> {
 }
 
 // Estados de envío
-export enum SendState {
-    ON_WAIT = 1,
-    ON_TRANSIT = 2,
-    DELIVERED = 3,
-    CANCELLED = 4,
-}
+export const SendState = {
+    ON_WAIT: 1,
+    ON_TRANSIT: 2,
+    DELIVERED: 3,
+    CANCELLED: 4,
+} as const;
+
+export type SendState = typeof SendState[keyof typeof SendState];
 
 // Mapeo de estados para mostrar en UI
 export const SEND_STATES = {

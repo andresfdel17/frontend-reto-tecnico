@@ -1,4 +1,4 @@
-import { ISend, IApiResponse, IApiResponseWithPagination, IRouteWithVehicle, IDriver } from './general.types';
+import type { ISend, IApiResponse, IApiResponseWithPagination, IRouteWithVehicle, IDriver } from './general.types';
 
 // ===== SENDS CONTROLLER =====
 
@@ -34,6 +34,35 @@ export interface ISendGetFilteredBody {
 export type ISendCreateResponse = IApiResponse<ISend>;
 export type ISendUpdateResponse = IApiResponse<ISend>;
 export type ISendGetFilteredResponse = IApiResponseWithPagination<ISend[]>;
+
+// ===== DRIVERS CONTROLLER =====
+
+// Request bodies para conductores
+export interface IDriverCreateBody {
+    cifnif: string;
+    name: string;
+}
+
+// Respuestas del controlador de conductores
+export type IDriverCreateResponse = IApiResponse<IDriver>;
+export type IDriverListResponse = IApiResponse<IDriver[]>;
+
+// Datos de formularios para conductores
+export interface IDriverFormData {
+    cifnif: string;
+    name: string;
+}
+
+// Props para componentes de conductores
+export interface IDriversTableProps {
+    data: IDriver[];
+    total?: number;
+    page?: number;
+    rowsPerPage?: number;
+    pending?: boolean;
+    onPageChange?: (page: number) => void;
+    onChangeRowsPerPage?: (newRowsPerPage: number) => void;
+}
 
 // ===== GENERAL CONTROLLER =====
 
