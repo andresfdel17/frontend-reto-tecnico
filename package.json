@@ -17,9 +17,9 @@
     "setup-frontend": "./scripts/setup-frontend.sh",
     "test-connectivity": "./scripts/test-connectivity.sh",
     "docker:start": "./scripts/setup-frontend.sh",
-    "docker:stop": "docker-compose down -v",
-    "docker:logs": "docker-compose logs -f",
-    "docker:rebuild": "docker-compose build --no-cache && docker-compose up -d --force-recreate"
+    "docker:stop": "./scripts/docker-cmd.sh down -v",
+    "docker:logs": "./scripts/docker-cmd.sh logs -f",
+    "docker:rebuild": "./scripts/docker-cmd.sh build --no-cache && ./scripts/docker-cmd.sh up -d --force-recreate"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.0.1",

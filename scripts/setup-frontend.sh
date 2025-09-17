@@ -3,6 +3,10 @@
 # Script para levantar el frontend con Docker
 set -e
 
+# Cargar utilidades de Docker Compose
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/docker-utils.sh"
+
 echo "🎨 Iniciando Frontend con Docker..."
 
 # Verificar si existe .env
@@ -65,15 +69,17 @@ fi
 echo "✅ Red compartida encontrada"
 
 # Verificar si Docker está corriendo
-if ! docker info > /dev/null 2>&1; then
-    echo "❌ Error: Docker no está corriendo"
+if ! verify_docker_running; then
     exit 1
 fi
+
+# Mostrar información sobre Docker Compose
+show_docker_compose_info
 
 echo "🐳 Construyendo y levantando frontend..."
 
 # Construir y levantar el servicio
-docker-compose up -d --build
+docker_compose_run up -d --build
 
 echo ""
 echo "🎉 ¡Frontend desplegado exitosamente!"
@@ -83,6 +89,7 @@ echo "   - Frontend: http://localhost:3001"
 echo "   - API Backend: http://localhost:3000/api"
 echo ""
 echo "🛠️ Comandos útiles:"
-echo "   - Ver logs: docker-compose logs -f"
-echo "   - Parar: docker-compose down"
-echo "   - Reconstruir: docker-compose up -d --build"
+DOCKER_COMPOSE_CMD=$(get_docker_compose_cmd)
+echo "   - Ver logs: $DOCKER_COMPOSE_CMD logs -f"
+echo "   - Parar: $DOCKER_COMPOSE_CMD down"
+echo "   - Reconstruir: $DOCKER_COMPOSE_CMD up -d --build"
